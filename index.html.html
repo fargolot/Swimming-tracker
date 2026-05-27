@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Swimming Tracker 🌊</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0C4A6E; font-family: Georgia, 'Times New Roman', serif; }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const SUPABASE_URL = "https://lxbhimbyflcmmvtlyoxz.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4YmhpbWJ5ZmxjbW12dGx5b3h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODUyMzgsImV4cCI6MjA5NTM2MTIzOH0.0SgWr2NSeT7o-4TUJKHWtxwEhPqiwIIxulIbL4R-0Jg";
+
+const PLAN = [
+  { week:1, phase:"Wydłużanie serii", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:2, phase:"Wydłużanie serii", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:3, phase:"Serie po 200m", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (8×25m + 60 sek przerwy)", series:"6×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"4× (8×25m + 60 sek przerwy)", series:"4×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:4, phase:"Serie po 200m", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"6× (8×25m + 60 sek przerwy)", series:"6×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"4× (8×25m + 60 sek przerwy)", series:"4×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:5, phase:"Serie po 400m", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"2× (16×25m + 90 sek przerwy)", series:"2×(16×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"16×25m + 2× (8×25m + 60 sek)", series:"16×25m + 2×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:6, phase:"Serie po 400m", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"2× (16×25m + 90 sek przerwy)", series:"2×(16×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"16×25m + 2× (8×25m + 60 sek)", series:"16×25m + 2×(8×25m)", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:7, phase:"Atak na 800m", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna", desc:"32×25m ciągiem — 800m", series:"32×25m", kind:"main"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, flipper:true, sets:[
+      {label:"Rozgrzewka", desc:"4×25m bez płetw", series:"4×25m", kind:"warm"},
+      {label:"Główna 🦈", desc:"4× (8×25m + 60 sek) z płetwami", series:"4×(8×25m)", kind:"flipper"},
+      {label:"Schłodzenie", desc:"4×25m bez płetw", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+  { week:8, phase:"Atak na 1 km!", trainings:[
+    { type:"A", duration:30, sets:[
+      {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
+      {label:"Główna 🏆", desc:"40×25m ciągiem — 1000m!", series:"40×25m", kind:"goal"},
+      {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
+    ]},
+    { type:"B", duration:40, flipper:true, sets:[
+      {label:"Rozgrzewka", desc:"4×25m bez płetw", series:"4×25m", kind:"warm"},
+      {label:"Główna 🦈", desc:"2× (16×25m + 90 sek) z płetwami + sighting co 8 basenów", series:"2×(16×25m)", kind:"flipper"},
+      {label:"Schłodzenie", desc:"4×25m bez płetw", series:"4×25m", kind:"cool"},
+    ]},
+  ]},
+];
+
+async function sbFetch(path, options={}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation",
+      ...options.headers,
+    },
+    ...options,
+  });
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+function WaveIcon() {
+  return (
+    <svg width="26" height="13" viewBox="0 0 56 20" fill="none" style={{display:"inline-block",verticalAlign:"middle"}}>
+      <path d="M0 10 Q7 2 14 10 Q21 18 28 10 Q35 2 42 10 Q49 18 56 10" stroke="#7DD3FC" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function SyncDot({status}) {
+  const cfg = {
+    idle:   {color:"#4ADE80", label:"zsynchronizowano"},
+    saving: {color:"#FCD34D", label:"zapisuję..."},
+    error:  {color:"#F87171", label:"błąd połączenia"},
+  };
+  const {color, label} = cfg[status] || cfg.idle;
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:5,fontSize:11,color:"rgba(147,197,253,0.75)"}}>
+      <div style={{width:6,height:6,borderRadius:"50%",background:color}}/>
+      {label}
+    </div>
+  );
+}
+
+function App() {
+  const [data, setData] = React.useState({});
+  const [activeWeek, setActiveWeek] = React.useState(1);
+  const [noteInput, setNoteInput] = React.useState("");
+  const [editingKey, setEditingKey] = React.useState(null);
+  const [datePickerKey, setDatePickerKey] = React.useState(null);
+  const [syncStatus, setSyncStatus] = React.useState("idle");
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    sbFetch("/trainings?select=*")
+      .then(rows => {
+        const d = {};
+        (rows||[]).forEach(r => { d[r.id] = r; });
+        setData(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const key = (week, type) => `w${week}t${type}`;
+
+  function getEntry(week, type) {
+    return data[key(week,type)] || {done:false,date:"",note:"",feeling:0};
+  }
+
+  async function setEntry(week, type, patch) {
+    const k = key(week, type);
+    const updated = {...getEntry(week,type), ...patch, id:k, updated_at:new Date().toISOString()};
+    setData(prev => ({...prev, [k]:updated}));
+    setSyncStatus("saving");
+    try {
+      await sbFetch("/trainings", {
+        method:"POST",
+        headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+        body:JSON.stringify(updated),
+      });
+      setSyncStatus("idle");
+    } catch { setSyncStatus("error"); }
+  }
+
+  function toggleDone(week, type) {
+    const e = getEntry(week, type);
+    if (!e.done) {
+      setEntry(week, type, {done:true, date:e.date||new Date().toISOString().split("T")[0]});
+    } else {
+      setEntry(week, type, {done:false});
+    }
+  }
+
+  function toDisplay(iso) {
+    if (!iso) return "";
+    const [y,m,d] = iso.split("-");
+    return `${d}.${m}.${y}`;
+  }
+
+  const allTrainings = PLAN.flatMap(w => w.trainings.map(t => ({week:w.week, type:t.type})));
+  const totalDone = allTrainings.filter(({week,type}) => getEntry(week,type).done).length;
+  const totalAll = allTrainings.length;
+  const pct = Math.round((totalDone/totalAll)*100);
+  const weekData = PLAN.find(w => w.week === activeWeek);
+
+  const kindColors = {
+    warm:    {bg:"#FEF3C7",text:"#92400E",border:"#FDE68A"},
+    main:    {bg:"#E0F2FE",text:"#075985",border:"#BAE6FD"},
+    flipper: {bg:"#ECFDF5",text:"#065F46",border:"#A7F3D0"},
+    goal:    {bg:"#FEF9C3",text:"#713F12",border:"#FDE047"},
+    cool:    {bg:"#F0F9FF",text:"#0C4A6E",border:"#E0F2FE"},
+  };
+
+  const styles = `
+    @keyframes ripple{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .wbtn{transition:all .18s;background:none;border:none;cursor:pointer;}
+    .wbtn:hover{transform:translateY(-2px)}
+    .tcard{transition:box-shadow .18s,transform .18s}
+    .tcard:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,0,0,.18)}
+    .dbtn{transition:all .15s}
+    .dbtn:hover{transform:scale(1.04)}
+  `;
+
+  return (
+    <div style={{minHeight:"100vh",background:"linear-gradient(160deg,#0C4A6E 0%,#075985 30%,#0369A1 60%,#164E63 100%)",fontFamily:"Georgia,'Times New Roman',serif",padding:"0 0 48px",position:"relative",overflow:"hidden"}}>
+      <style>{styles}</style>
+
+      {/* Ripple bg */}
+      <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",opacity:.08}}>
+        {[0,1,2,3].map(i=>(
+          <div key={i} style={{position:"absolute",borderRadius:"50%",border:"1.5px solid #7DD3FC",width:300+i*200,height:300+i*200,left:`${10+i*15}%`,top:`${-20+i*10}%`,animation:`ripple ${4+i*1.5}s ease-in-out infinite`,animationDelay:`${i*.8}s`}}/>
+        ))}
+      </div>
+
+      {/* Header */}
+      <div style={{padding:"28px 20px 16px",textAlign:"center",position:"relative",animation:"fadeUp .5s ease"}}>
+        <div style={{color:"#7DD3FC",fontSize:11,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4}}>Plan pływacki</div>
+        <h1 style={{color:"#F0F9FF",fontSize:24,fontWeight:"normal",margin:"0 0 4px",letterSpacing:"-.01em"}}>
+          Droga do 1 km <WaveIcon/>
+        </h1>
+        <div style={{color:"#BAE6FD",fontSize:12,marginBottom:14}}>8 tygodni · 16 treningów · basen 25m</div>
+        <div style={{maxWidth:340,margin:"0 auto 8px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",color:"#7DD3FC",fontSize:12,marginBottom:4}}>
+            <span>Postęp</span>
+            <span>{totalDone}/{totalAll} · {pct}%</span>
+          </div>
+          <div style={{height:6,background:"rgba(255,255,255,.12)",borderRadius:3,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${pct}%`,background:"linear-gradient(90deg,#38BDF8,#7DD3FC)",borderRadius:3,transition:"width .4s ease"}}/>
+          </div>
+        </div>
+        <div style={{display:"flex",justifyContent:"center"}}>
+          {loading
+            ? <div style={{fontSize:11,color:"rgba(147,197,253,.7)",display:"flex",alignItems:"center",gap:5}}>
+                <div style={{width:10,height:10,border:"1.5px solid #7DD3FC",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .8s linear infinite"}}/>
+                ładuję dane...
+              </div>
+            : <SyncDot status={syncStatus}/>
+          }
+        </div>
+      </div>
+
+      {/* Week buttons */}
+      <div style={{padding:"0 12px 14px",display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center"}}>
+        {PLAN.map(w => {
+          const wd = w.trainings.filter(t=>getEntry(w.week,t.type).done).length;
+          const isActive = activeWeek===w.week;
+          const allDone = wd===w.trainings.length;
+          return (
+            <button key={w.week} className="wbtn" onClick={()=>setActiveWeek(w.week)} style={{
+              background:isActive?"rgba(255,255,255,.22)":allDone?"rgba(52,211,153,.18)":"rgba(255,255,255,.08)",
+              border:isActive?"1.5px solid rgba(255,255,255,.7)":allDone?"1.5px solid #34D399":"1px solid rgba(255,255,255,.2)",
+              borderRadius:10,color:isActive?"#F0F9FF":allDone?"#6EE7B7":"#BAE6FD",
+              padding:"6px 12px",fontSize:13,fontFamily:"inherit",minWidth:52,
+            }}>
+              <div style={{fontWeight:isActive?"bold":"normal"}}>Tydz. {w.week}</div>
+              <div style={{fontSize:10,opacity:.8}}>{wd}/{w.trainings.length} ✓</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Week detail */}
+      {weekData && (
+        <div style={{padding:"0 14px",animation:"fadeUp .3s ease",maxWidth:700,margin:"0 auto"}}>
+          <div style={{background:"rgba(255,255,255,.07)",borderRadius:16,border:"0.5px solid rgba(255,255,255,.15)",padding:"13px 16px",marginBottom:10}}>
+            <div style={{color:"#7DD3FC",fontSize:11,letterSpacing:".12em",textTransform:"uppercase"}}>Tydzień {weekData.week}</div>
+            <div style={{color:"#F0F9FF",fontSize:17,marginTop:2}}>{weekData.phase}</div>
+          </div>
+
+          {weekData.trainings.map(training => {
+            const entry = getEntry(weekData.week, training.type);
+            const isEditing = editingKey===key(weekData.week,training.type);
+            const isDateEditing = datePickerKey===key(weekData.week,training.type);
+            return (
+              <div key={training.type} className="tcard" style={{
+                background:entry.done?"rgba(52,211,153,.10)":"rgba(255,255,255,.09)",
+                border:entry.done?"1px solid rgba(52,211,153,.4)":training.flipper?"1px solid rgba(167,243,208,.3)":"0.5px solid rgba(255,255,255,.14)",
+                borderRadius:14,padding:"13px 14px",marginBottom:10,
+              }}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+                  <div style={{flex:1}}>
+                    {/* Badge row */}
+                    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:7,flexWrap:"wrap"}}>
+                      <span style={{
+                        background:training.flipper?"rgba(167,243,208,.2)":"rgba(186,230,253,.2)",
+                        color:training.flipper?"#6EE7B7":"#7DD3FC",
+                        border:training.flipper?"0.5px solid rgba(167,243,208,.4)":"0.5px solid rgba(125,211,252,.4)",
+                        borderRadius:6,padding:"2px 8px",fontSize:12,
+                      }}>Trening {training.type} · {training.duration} min</span>
+                      {training.flipper && <span style={{background:"rgba(167,243,208,.15)",color:"#34D399",border:"0.5px solid rgba(52,211,153,.3)",borderRadius:6,padding:"2px 7px",fontSize:11}}>🦈 płetwy</span>}
+                    </div>
+
+                    {/* Date picker */}
+                    {entry.done && (
+                      <div style={{marginBottom:8}}>
+                        {isDateEditing ? (
+                          <div style={{display:"flex",alignItems:"center",gap:7}}>
+                            <span style={{color:"#93C5FD",fontSize:12}}>Data:</span>
+                            <input type="date" autoFocus value={entry.date||""}
+                              onChange={e=>{setEntry(weekData.week,training.type,{date:e.target.value});setDatePickerKey(null);}}
+                              onBlur={()=>setDatePickerKey(null)}
+                              style={{background:"rgba(255,255,255,.12)",border:"0.5px solid rgba(125,211,252,.6)",borderRadius:6,padding:"3px 8px",color:"#F0F9FF",fontSize:13,fontFamily:"inherit",outline:"none",colorScheme:"dark"}}
+                            />
+                          </div>
+                        ) : (
+                          <button onClick={()=>setDatePickerKey(key(weekData.week,training.type))} style={{
+                            background:"rgba(52,211,153,.1)",border:"0.5px solid rgba(52,211,153,.35)",
+                            borderRadius:7,color:"#6EE7B7",cursor:"pointer",padding:"4px 10px",
+                            fontSize:13,fontFamily:"inherit",display:"flex",alignItems:"center",gap:5,
+                          }}>
+                            📅 {entry.date ? toDisplay(entry.date) : "ustaw datę"}
+                            <span style={{fontSize:10,opacity:.6}}>zmień</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Sets */}
+                    <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:8}}>
+                      {training.sets.map((set,i)=>{
+                        const c=kindColors[set.kind]||kindColors.cool;
+                        return (
+                          <div key={i} title={set.desc} style={{background:c.bg,color:c.text,border:`0.5px solid ${c.border}`,borderRadius:7,padding:"3px 9px",fontSize:12}}>
+                            <span style={{opacity:.7,fontSize:10,marginRight:3}}>{set.label}</span>{set.series}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Note */}
+                    {entry.note && !isEditing && (
+                      <div style={{background:"rgba(255,255,255,.07)",borderRadius:7,padding:"5px 9px",fontSize:12,color:"#BAE6FD",marginBottom:6}}>
+                        💬 {entry.note}
+                      </div>
+                    )}
+                    {isEditing && (
+                      <div style={{marginBottom:6}}>
+                        <input autoFocus value={noteInput} onChange={e=>setNoteInput(e.target.value)}
+                          onKeyDown={e=>{
+                            if(e.key==="Enter"){setEntry(weekData.week,training.type,{note:noteInput});setEditingKey(null);}
+                            if(e.key==="Escape") setEditingKey(null);
+                          }}
+                          placeholder="Notatka (Enter = zapisz)..."
+                          style={{width:"100%",background:"rgba(255,255,255,.1)",border:"0.5px solid rgba(125,211,252,.5)",borderRadius:7,padding:"5px 10px",color:"#F0F9FF",fontSize:13,fontFamily:"inherit",outline:"none"}}
+                        />
+                        <div style={{color:"#7DD3FC",fontSize:11,marginTop:3}}>Enter = zapisz · Esc = anuluj</div>
+                      </div>
+                    )}
+
+                    {/* Feeling */}
+                    {entry.done && (
+                      <div style={{display:"flex",alignItems:"center",gap:4,marginTop:2}}>
+                        <span style={{color:"#93C5FD",fontSize:11}}>Samopoczucie:</span>
+                        {[1,2,3,4,5].map(v=>(
+                          <button key={v} onClick={()=>setEntry(weekData.week,training.type,{feeling:v})}
+                            style={{background:"none",border:"none",cursor:"pointer",fontSize:16,opacity:entry.feeling>=v?1:.3,padding:"0 1px"}}>
+                            🌊
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Buttons */}
+                  <div style={{display:"flex",flexDirection:"column",gap:5,alignItems:"flex-end",flexShrink:0}}>
+                    <button className="dbtn" onClick={()=>toggleDone(weekData.week,training.type)} style={{
+                      background:entry.done?"rgba(52,211,153,.25)":"rgba(255,255,255,.12)",
+                      border:entry.done?"1px solid #34D399":"0.5px solid rgba(255,255,255,.3)",
+                      borderRadius:9,color:entry.done?"#34D399":"#BAE6FD",
+                      cursor:"pointer",padding:"6px 12px",fontSize:13,fontFamily:"inherit",
+                    }}>
+                      {entry.done?"✓ Zrobione":"Zaznacz"}
+                    </button>
+                    <button onClick={()=>{setNoteInput(entry.note||"");setEditingKey(isEditing?null:key(weekData.week,training.type));}} style={{
+                      background:"rgba(255,255,255,.07)",border:"0.5px solid rgba(255,255,255,.18)",
+                      borderRadius:9,color:"#93C5FD",cursor:"pointer",padding:"4px 10px",fontSize:12,fontFamily:"inherit",
+                    }}>
+                      ✏️ Notatka
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div style={{textAlign:"center",color:"rgba(147,197,253,.45)",fontSize:11,marginTop:16,padding:"0 16px"}}>
+        ☁️ dane synchronizują się z chmurą · trener widzi twoje postępy na żywo
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
