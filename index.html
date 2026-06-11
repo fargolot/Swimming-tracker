@@ -21,96 +21,96 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const PLAN = [
   { week:1, phase:"Wydłużanie serii", trainings:[
-    { type:"A", duration:30, time:"~27 min", sets:[
+    { type:"A", duration:30, time:"~27 min", meters:800, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~27 min", sets:[
+    { type:"B", duration:40, time:"~27 min", meters:800, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:2, phase:"Wydłużanie serii", trainings:[
-    { type:"A", duration:30, time:"~27 min", sets:[
+    { type:"A", duration:30, time:"~27 min", meters:800, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~27 min", sets:[
+    { type:"B", duration:40, time:"~27 min", meters:800, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (4×25m + 45 sek przerwy)", series:"6×(4×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:3, phase:"Serie po 150m", trainings:[
-    { type:"A", duration:30, time:"~36 min", sets:[
+    { type:"A", duration:30, time:"~36 min", meters:1100, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (6×25m + 45 sek przerwy)", series:"6×(6×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~36 min", sets:[
+    { type:"B", duration:40, time:"~36 min", meters:1100, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (6×25m + 45 sek przerwy)", series:"6×(6×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:4, phase:"Serie po 200m", trainings:[
-    { type:"A", duration:30, time:"~30 min", sets:[
+    { type:"A", duration:30, time:"~30 min", meters:1200, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"4× (8×25m + 45 sek przerwy)", series:"4×(8×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~43 min", sets:[
+    { type:"B", duration:40, time:"~43 min", meters:1700, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"6× (8×25m + 45 sek przerwy)", series:"6×(8×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:5, phase:"Serie po 300m", trainings:[
-    { type:"A", duration:30, time:"~30 min", sets:[
+    { type:"A", duration:30, time:"~30 min", meters:1300, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"3× (12×25m + 45 sek przerwy)", series:"3×(12×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~43 min", sets:[
+    { type:"B", duration:40, time:"~43 min", meters:1700, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"4× (12×25m + 45 sek przerwy)", series:"4×(12×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:6, phase:"Serie po 400m", trainings:[
-    { type:"A", duration:30, time:"~24 min", sets:[
+    { type:"A", duration:30, time:"~24 min", meters:1200, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"2× (16×25m + 45 sek przerwy)", series:"2×(16×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~35 min", sets:[
+    { type:"B", duration:40, time:"~35 min", meters:1800, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"3× (16×25m + 45 sek przerwy)", series:"3×(16×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:7, phase:"Długie serie", trainings:[
-    { type:"A", duration:30, time:"~30 min", sets:[
+    { type:"A", duration:30, time:"~30 min", meters:1400, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna", desc:"2× (20×25m + 45 sek przerwy)", series:"2×(20×25m)", kind:"main"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~36 min", sets:[
+    { type:"B", duration:40, time:"~36 min", meters:1400, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna 🦈", desc:"2× (20×25m + 45 sek przerwy) z płetwami", series:"2×(20×25m)", kind:"flipper"},
       {label:"Schłodzenie", desc:"4×25m bez płetw", series:"4×25m", kind:"cool"},
     ]},
   ]},
   { week:8, phase:"Atak na 1 km!", trainings:[
-    { type:"A", duration:30, time:"~34 min", sets:[
+    { type:"A", duration:30, time:"~34 min", meters:1200, sets:[
       {label:"Rozgrzewka", desc:"4×25m spokojnie", series:"4×25m", kind:"warm"},
       {label:"Główna 🏆", desc:"40×25m ciągiem — 1000m!", series:"40×25m", kind:"goal"},
       {label:"Schłodzenie", desc:"4×25m spokojnie", series:"4×25m", kind:"cool"},
     ]},
-    { type:"B", duration:40, time:"~34 min", flipper:true, sets:[
+    { type:"B", duration:40, time:"~34 min", meters:1200, flipper:true, sets:[
       {label:"Rozgrzewka", desc:"4×25m bez płetw", series:"4×25m", kind:"warm"},
       {label:"Główna 🦈", desc:"40×25m ciągiem z płetwami — 1000m!", series:"40×25m", kind:"flipper"},
       {label:"Schłodzenie", desc:"4×25m bez płetw", series:"4×25m", kind:"cool"},
@@ -230,6 +230,7 @@ function App() {
   const totalDone = allTrainings.filter(({week,type}) => getEntry(week,type).done).length;
   const totalAll = allTrainings.length;
   const pct = Math.round((totalDone/totalAll)*100);
+  const totalMeters = PLAN.flatMap(w => w.trainings).filter(t => getEntry(PLAN.find(w=>w.trainings.includes(t)).week, t.type).done).reduce((sum, t) => sum + (t.meters||0), 0);
   const weekData = PLAN.find(w => w.week === activeWeek);
 
   const kindColors = {
@@ -279,6 +280,7 @@ function App() {
             <div style={{height:"100%",width:`${pct}%`,background:"linear-gradient(90deg,#38BDF8,#7DD3FC)",borderRadius:3,transition:"width .4s ease"}}/>
           </div>
         </div>
+        {totalMeters > 0 && <div style={{color:"#63b3ed",fontSize:12,marginBottom:6,letterSpacing:".05em"}}>🏊 Łącznie przepłynąłeś: <strong>{totalMeters >= 1000 ? (totalMeters/1000).toFixed(1)+"  km" : totalMeters+" m"}</strong></div>}
         <div style={{display:"flex",justifyContent:"center"}}>
           {loading
             ? <div style={{fontSize:11,color:"rgba(147,197,253,.7)",display:"flex",alignItems:"center",gap:5}}>
@@ -339,6 +341,7 @@ function App() {
                         borderRadius:6,padding:"2px 8px",fontSize:12,
                       }}>Trening {training.type} · {training.duration} min</span>
                       {training.time && <span style={{background:"rgba(212,168,72,.12)",color:"#d4a848",border:"0.5px solid rgba(212,168,72,.3)",borderRadius:6,padding:"2px 8px",fontSize:11}}>⏱ {training.time}</span>}
+                      {training.meters && <span style={{background:"rgba(99,179,237,.12)",color:"#63b3ed",border:"0.5px solid rgba(99,179,237,.3)",borderRadius:6,padding:"2px 8px",fontSize:11}}>🏊 {training.meters} m</span>}
                       {training.flipper && <span style={{background:"rgba(167,243,208,.15)",color:"#34D399",border:"0.5px solid rgba(52,211,153,.3)",borderRadius:6,padding:"2px 7px",fontSize:11}}>🦈 płetwy</span>}
                     </div>
 
