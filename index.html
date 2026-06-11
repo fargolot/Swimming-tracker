@@ -124,7 +124,7 @@ async function sbFetch(path, options={}) {
       "apikey": SUPABASE_KEY,
       "Authorization": `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/json",
-      
+      "Prefer": "return=representation",
       ...options.headers,
     },
     ...options,
@@ -188,27 +188,13 @@ function App() {
     setData(prev => ({...prev, [k]:updated}));
     setSyncStatus("saving");
     try {
-      const res = await fetch(SUPABASE_URL + "/rest/v1/trainings", {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "resolution=merge-duplicates"
-        },
-        body: JSON.stringify(updated)
+      await sbFetch("/trainings", {
+        method:"POST",
+        headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+        body:JSON.stringify(updated),
       });
-      if (res.ok) {
-        setSyncStatus("idle");
-      } else {
-        const err = await res.text();
-        console.error("Supabase error:", err);
-        setSyncStatus("error");
-      }
-    } catch(e) {
-      console.error("Fetch error:", e);
-      setSyncStatus("error");
-    }
+      setSyncStatus("idle");
+    } catch { setSyncStatus("error"); }
   }
 
   function toggleDone(week, type) {
